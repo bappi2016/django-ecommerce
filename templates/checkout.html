@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+   <!--Product Checkout layout-->
+        {% include 'partials/_checkout_layout.html' %}
+   <!--Product Checkout layout-->
+{% endblock content %}
+
+
+{% block extra_script %}
+  <script>
+    var hideable_form = $('.hideable_form');
+    var default_address = document.querySelector("input[name=use_default_address]");
+
+    default_address.addEventListener('change',function(){
+            if(this.checked){
+                  hideable_form.hide();  
+            }
+            else{
+                    hideable_form.show();
+            }
+    })
+  
+  </script>
+{% endblock extra_script %}
