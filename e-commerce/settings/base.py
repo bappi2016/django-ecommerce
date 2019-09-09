@@ -65,7 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','django-ecommerce-sep19.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','dj-ecom.herokuapp.com']
 
 
 ROOT_URLCONF = 'e-commerce.urls'
