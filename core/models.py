@@ -50,6 +50,9 @@ class Item(models.Model):
     def get_add_to_cart_url(self):
         return reverse("core:add-to-cart", kwargs={"slug": self.slug})
 
+    def get_add_to_wishlist_url(self):
+        return reverse("core:add-to-wishlist",kwargs={"slug":self.slug})
+
     # {{object.get_remove_from_cart_url}}
     def get_remove_from_cart_url(self):
         return reverse("core:remove-from-cart", kwargs={"slug": self.slug})
@@ -160,10 +163,30 @@ class Refund(models.Model):
 
     def __str__(self):
         return 'pk'.format(self)
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)# here CASCADE is the behavior to adopt when the referenced object(because it is a foreign key) is deleted. it is not specific to django,this is an sql standard.
+    wished_item = models.ForeignKey(Item,on_delete=models.CASCADE)
+    slug = models.CharField(max_length=30,null=True,blank=True)
+    added_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.wished_item.title
+    
     
     
 
             
+
+
+
+# There are 6 posssible actions to take when such event(reference object is deleted) occurs:
+
+# 1. CASCADE : When the referenced object is deleted, also delete the objects that have references to it(ex:when you remove a blog post for instance,you might want to delete comments as well). SQL equivalent :CASCADE
+
+
+# 2.SET_NULL : Set the references to NULL. (requires the field to be nullable). For instance, when you delete a user, you might want to keep the comments he posted on blog posts, but say it was posted by annonymous (for deleted) user. SQL Equivalent :SET NULL.
 
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item,Order,Order_Item,BillingAddress,Payment,Coupon,Refund
+from .models import Item,Order,Order_Item,BillingAddress,Payment,Coupon,Refund,Wishlist
 # Register your models here.
 
 # create a method which will change the field in the admin section
@@ -25,6 +25,10 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['user' , 'ordered' , 'item']
 
+
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ['user']
+
 admin.site.register(Item)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Order_Item,OrderItemAdmin)
@@ -32,6 +36,7 @@ admin.site.register(BillingAddress)
 admin.site.register(Payment)
 admin.site.register(Coupon)
 admin.site.register(Refund)
+admin.site.register(Wishlist,WishlistAdmin)
 
 
 

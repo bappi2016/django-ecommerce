@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<main>
+    <div class="container">
+    <h1>Wishlist</h1>
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Item</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for item  in wishlist.all  %}
+        <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{item.added_date}}</td>
+            <td>{{item.wished_item.title}}</td>
+            <td><a class='btn btn-primary btn-sm' href="{% url 'core:add-to-cart' item.wished_item.slug %}"> <i class="fas fa-shopping-cart"></i>Add to cart</a></td>
+            
+            <td><span> Remove from wishlist</span></td>
+            </tr>
+                {% empty %}
+            <tr>
+                <td colspan='5'>Your cart is empty</td>
+            </tr>
+            
+    {% endfor %}
+        <tr>
+            <td colspan='5'>
+                <a class='btn btn-primary float-right ' href="{% url 'core:home' %}">Continue Shopping</a>
+        
+            </td>
+        </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+    
+    </div>
+</div>
+</main>
+{% endblock content %}

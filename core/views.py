@@ -1,22 +1,28 @@
+from __future__ import absolute_import, unicode_literals
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Item,Order,Order_Item,BillingAddress,Payment,Coupon,Refund
+from .models import Item,Order,Order_Item,BillingAddress,Payment,Coupon,Refund,Wishlist
 from django.views.generic import ListView,DetailView,View
 from django.utils import timezone
+from .tasks import send_feedback_email_task
 from django.contrib.auth.decorators import login_required
 from .forms import CheckoutForm,CouponForm,RefundForm
-
+from django.core import mail
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
 import random
 from random import choice
 import string
 
 
+from django.contrib.auth.models import User
+
+
 
 
 # Create your views here.
-
 class HomeView(ListView): # for displaying listview the default context variable is object_list
     model = Item
     paginate_by = 4
@@ -299,7 +305,7 @@ class PaymentView(View):
         order.payment = payment
         order.ref_code = create_ref_code()
         order.save()
-      
+
         messages.success(self.request,"Your order has been received,We will notify you soon")
         return redirect('core:home')
 
@@ -377,6 +383,8 @@ class RequestRefundView(View):
                 refund.reason = message
                 refund.email = email
                 refund.save()
+                send_feedback_email_task.delay(message,email,ref_code)
+ 
                 
                 messages.info(self.request,'Your request has been submitted, we will notify you soon')
                 return redirect('core:request-refund')
@@ -384,6 +392,49 @@ class RequestRefundView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request,"Your referrence code didn't match")
                 return redirect('core:request-refund')
+
+# add and remove wishlist funtionality
+
+
+@login_required
+def add_to_wishlist(request,slug):
+
+    item = get_object_or_404(Item,slug=slug)
+
+    wished_item,created = Wishlist.objects.get_or_create(wished_item=item,
+    slug = item.slug,
+    user = request.user,
+    ) # creating or extracting the wished item
+    if created:
+        messages.info(request,'The item was added to your wishlist')
+    # make a query to check if item requested item is exits or not
+    else:
+        messages.info(request,'The item was already in your wishlist')
+    return redirect('core:product_detail',slug=slug)
+
+    
+
+    
+    # if wish_list_qs.exists():
+    #     messages.info(request,'The item was already in your wishlist')
+    #     return redirect('core:product_detail',slug=slug)
+
+
+
+class WishlistView(LoginRequiredMixin,View):
+    def get(self, *args , **kwargs):
+        try:
+            order = Order.objects.get(user=self.request.user,ordered=False)
+            wishlist = Wishlist.objects.filter(user=self.request.user)
+            context = { # set the default context variable object to order
+            'object':order,
+            'wishlist':wishlist
+            }
+            return render(self.request,"wishlist.html",context)
+        except ObjectDoesNotExist:# if user didn't have any item in the cart,but request the cart view
+            messages.warning(self.request,"You do not have any wishlist item")
+            return redirect('/')
+
 
 
 

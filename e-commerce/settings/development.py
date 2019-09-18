@@ -1,10 +1,15 @@
+from __future__ import absolute_import, unicode_literals
 from .base import *
 
+SECRET_KEY = 'jx@fm!+yqselbaqp^z&hnckmj$d*!lxmtl-rlsezy-(-bct=k%'
+
 DEBUG = True
+
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost','dj-ecom.herokuapp.com']
 
 INSTALLED_APPS += [
-    'debug_toolbar'
+    'debug_toolbar',
+
 ]
 
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
@@ -41,5 +46,3 @@ DATABASES = {
     }
 }
 
-STRIPE_PUBLIC_KEY = ''
-STRIPE_SECRET_KEY = ''

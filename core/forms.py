@@ -47,13 +47,15 @@ class RefundForm(forms.Form):
         'aria-label':'Recipient\'s username'}
     ),max_length=30,required=True)
 
-    message = forms.CharField(widget=forms.Textarea(
-        attrs={'class':'form-control',
-        'placeholder':'Type your message here',
-        'rows':4}
-    ),max_length=30,required=True)
+    
 
     email = forms.EmailField(widget= forms.EmailInput(attrs={
         'class':'form-control',
         'placeholder':'Your email address',
     }))
+
+    message = forms.CharField(widget=forms.Textarea(
+        attrs={'class':'form-control',
+        'placeholder':'Type your message here',
+        'rows':4}
+    ),max_length=30,required=True)

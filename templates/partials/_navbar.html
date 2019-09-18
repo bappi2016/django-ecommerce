@@ -1,5 +1,6 @@
   {% load static %}
   {% load cart_template_tag %}
+  {% load wishlist_template_tag %}
   <!-- Navbar -->
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
@@ -63,7 +64,8 @@
             </li>
 
             <li class="nav-item">
-            <a href="{% url 'core:request-refund' %}" class="nav-link waves-effect">
+            <a href="{% url 'core:wishlist' %}" class="nav-link waves-effect">
+            <span class="badge red z-depth-1 mr-1"> {{request.user|wishlist_item_count}}</span>
              <i class="fas fa-heart"></i>
               <span class="clearfix d-none d-sm-inline-block">Wishlist</span>
             </a>

@@ -11,6 +11,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+
+# set the default Django settings module for the  program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'e-commerce.settings.development')
 
 
